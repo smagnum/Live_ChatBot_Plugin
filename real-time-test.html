@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Messaging Test - WordPress Support Hub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin: 0 0 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .test-card h3 {
+            margin: 0 0 20px 0;
+            color: #10b981;
+            font-size: 1.5em;
+        }
+        .test-steps {
+            list-style: none;
+            padding: 0;
+        }
+        .test-steps li {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #10b981;
+        }
+        .test-steps li::before {
+            content: "✓ ";
+            color: #10b981;
+            font-weight: bold;
+        }
+        .link-btn {
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .link-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .link-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-indicator.active {
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        .status-indicator.inactive {
+            background: #ef4444;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .demo-note {
+            background: #fbbf24;
+            color: #92400e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 Real-Time Messaging Test</h1>
+            <p>Test the complete real-time chat system between visitors and support agents</p>
+        </div>
+
+        <div class="demo-note">
+            <strong>🎯 Expected Result:</strong><br>
+            When a visitor sends a message, it should appear instantly in the admin dashboard.<br>
+            When an admin replies, it should appear instantly in the visitor widget.<br>
+            <strong>No page refresh needed!</strong>
+        </div>
+
+        <div class="test-grid">
+            <!-- Visitor Side -->
+            <div class="test-card">
+                <h3><span class="status-indicator active"></span>Visitor Side</h3>
+                <p>This simulates a website visitor using the chat widget.</p>
+                
+                <ul class="test-steps">
+                    <li>Open visitor chat widget (bottom-right corner)</li>
+                    <li>Send a message as a visitor</li>
+                    <li>Wait for admin response (should appear automatically)</li>
+                    <li>Continue conversation in real-time</li>
+                </ul>
+                
+                <a href="test-visitor-chat.html" target="_blank" class="link-btn">💬 Open Visitor Chat</a>
+            </div>
+
+            <!-- Admin Side -->
+            <div class="test-card">
+                <h3><span class="status-indicator active"></span>Admin Side</h3>
+                <p>This simulates the support agent dashboard.</p>
+                
+                <ul class="test-steps">
+                    <li>Login to support dashboard</li>
+                    <li>See visitor conversation appear automatically</li>
+                    <li>Click conversation to open chat modal</li>
+                    <li>Send reply (appears instantly in visitor widget)</li>
+                </ul>
+                
+                <a href="index.html" target="_blank" class="link-btn">🎛️ Open Admin Dashboard</a>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>🔬 Testing Instructions</h3>
+            <ol style="padding-left: 20px; color: rgba(255,255,255,0.9);">
+                <li><strong>Open Both Windows:</strong> Click the links above to open both visitor chat and admin dashboard in separate windows/tabs</li>
+                <li><strong>Login to Admin:</strong> Use your WordPress credentials to connect to the admin dashboard</li>
+                <li><strong>Send Visitor Message:</strong> In the visitor chat, send a message like "Hello, I need help!"</li>
+                <li><strong>Check Admin Dashboard:</strong> Within 5 seconds, the conversation should appear in the client list (auto-refresh)</li>
+                <li><strong>Open Conversation:</strong> Click on the client in the dashboard to open the chat modal</li>
+                <li><strong>Send Admin Reply:</strong> Type a response like "Hi! How can I help you today?"</li>
+                <li><strong>Check Visitor Widget:</strong> Within 3 seconds, the admin's reply should appear in the visitor chat (with notification if closed)</li>
+                <li><strong>Continue Testing:</strong> Send messages back and forth to test real-time synchronization</li>
+            </ol>
+        </div>
+
+        <div class="test-card">
+            <h3>⚡ Real-Time Features</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4>Visitor Widget:</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>Polls for new admin messages every 3 seconds</li>
+                        <li>Shows notification badge when new message arrives</li>
+                        <li>Auto-scrolls to new messages</li>
+                        <li>Works without any authentication</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Admin Dashboard:</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>Auto-refreshes client list every 5 seconds</li>
+                        <li>Polls for new messages in open conversations every 2 seconds</li>
+                        <li>Updates conversation in real-time</li>
+                        <li>Shows live message counts and timestamps</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>🐛 Debug Tools</h3>
+            <p>If something isn't working as expected:</p>
+            <a href="api/debug-visitor-messages.php" target="_blank" class="link-btn secondary">📊 View Database Messages</a>
+            <a href="debug-frontend.html" target="_blank" class="link-btn secondary">🔍 Frontend Debug Tools</a>
+        </div>
+    </div>
+
+    <!-- Include the visitor widget on this page too -->
+    <div class="chatbot-widget">
+        <!-- Chat Toggle Button -->
+        <div class="chatbot-toggle" id="chatToggle">
+            <i class="fas fa-comments"></i>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="chatbot-window" id="chatWindow">
+            <!-- Header -->
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="chatbot-header-text">
+                    <h3>Live Support</h3>
+                    <p>Real-time test widget</p>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chatbot-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="chatbot-message bot">
+                    <div class="chatbot-message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chatbot-message-content">
+                        <div class="chatbot-message-bubble">
+                            Hello! This is the real-time test widget. Send a message to test! 🚀
+                        </div>
+                        <div class="chatbot-message-time" id="welcomeTime"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chatbot-input-area">
+                <div class="chatbot-input-container">
+                    <textarea id="chatInput" class="chatbot-input" placeholder="Type your test message..." rows="1"></textarea>
+                    <button id="sendBtn" class="chatbot-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Include simplified widget styles and script -->
+    <style>
+        /* Simplified widget styles for this test page */
+        .chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            font-family: inherit;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            color: #374151;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .chatbot-header-text h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .chatbot-header-text p {
+            margin: 4px 0 0 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chatbot-message {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .chatbot-message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .chatbot-message.user .chatbot-message-avatar {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .chatbot-message.bot .chatbot-message-avatar {
+            background: #10b981;
+            color: white;
+        }
+
+        .chatbot-message-bubble {
+            max-width: 250px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .chatbot-message.user .chatbot-message-bubble {
+            background: #3b82f6;
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .chatbot-message.bot .chatbot-message-bubble {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 6px;
+        }
+
+        .chatbot-message-time {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .chatbot-input-area {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .chatbot-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            min-height: 20px;
+            max-height: 60px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .chatbot-input:focus {
+            border-color: #667eea;
+        }
+
+        .chatbot-send-btn {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-send-btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+
+    <script>
+        class TestChatWidget {
+            constructor() {
+                this.isOpen = false;
+                this.clientIp = 'test_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                this.visitorApiUrl = 'api/visitor-messages.php';
+                this.lastMessageId = 0;
+                this.pollInterval = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.showWelcomeTime();
+                this.startMessagePolling();
+            }
+
+            bindEvents() {
+                const toggle = document.getElementById('chatToggle');
+                const sendBtn = document.getElementById('sendBtn');
+                const input = document.getElementById('chatInput');
+
+                toggle.addEventListener('click', () => this.toggleChat());
+                sendBtn.addEventListener('click', () => this.sendMessage());
+                
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+            }
+
+            startMessagePolling() {
+                this.pollInterval = setInterval(async () => {
+                    await this.checkForNewMessages();
+                }, 3000);
+                
+                console.log('🔄 Test widget polling started for:', this.clientIp);
+            }
+            
+            async checkForNewMessages() {
+                try {
+                    const url = `${this.visitorApiUrl}?client_ip=${encodeURIComponent(this.clientIp)}&last_message_id=${this.lastMessageId}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (data.success && data.data.messages && data.data.messages.length > 0) {
+                        data.data.messages.forEach(message => {
+                            if (message.sender === 'support') {
+                                this.addMessage(message.message, 'bot');
+                                console.log('📨 Received admin message:', message.message);
+                            }
+                        });
+                        
+                        this.lastMessageId = data.data.last_message_id;
+                    }
+                } catch (error) {
+                    console.error('Error polling:', error);
+                }
+            }
+
+            toggleChat() {
+                if (this.isOpen) {
+                    this.closeChat();
+                } else {
+                    this.openChat();
+                }
+            }
+
+            openChat() {
+                const toggle = document.getElementById('chatToggle');
+                const window = document.getElementById('chatWindow');
+
+                this.isOpen = true;
+                toggle.classList.add('active');
+                window.classList.add('active');
+
+                setTimeout(() => {
+                    document.getElementById('chatInput').focus();
+                }, 300);
+            }
+
+            closeChat() {
+                const toggle = document.getElementById('chatToggle');
+                const window = document.getElementById('chatWindow');
+
+                this.isOpen = false;
+                toggle.classList.remove('active');
+                window.classList.remove('active');
+            }
+
+            async sendMessage() {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+
+                if (!message) return;
+
+                this.addMessage(message, 'user');
+                input.value = '';
+
+                try {
+                    const response = await fetch(this.visitorApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            client_ip: this.clientIp,
+                            message: message,
+                            client_name: 'Test Visitor'
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log('✅ Test message sent:', message);
+                        this.addMessage('Message sent! Check the admin dashboard. 📊', 'bot');
+                        this.lastMessageId = Math.max(this.lastMessageId, data.data.message_id);
+                    }
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
+            }
+
+            addMessage(text, sender) {
+                const container = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chatbot-message ${sender}`;
+
+                const time = new Date().toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                messageDiv.innerHTML = `
+                    <div class="chatbot-message-avatar">
+                        <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+                    </div>
+                    <div class="chatbot-message-content">
+                        <div class="chatbot-message-bubble">
+                            ${this.escapeHtml(text)}
+                        </div>
+                        <div class="chatbot-message-time">${time}</div>
+                    </div>
+                `;
+
+                container.appendChild(messageDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            showWelcomeTime() {
+                const timeElement = document.getElementById('welcomeTime');
+                const time = new Date().toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                timeElement.textContent = time;
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // Initialize test widget
+        document.addEventListener('DOMContentLoaded', () => {
+            new TestChatWidget();
+        });
+    </script>
+</body>
+</html> 

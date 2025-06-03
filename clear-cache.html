@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache - WordPress Support Hub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 2em;
+        }
+        .btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .btn.danger {
+            background: #ef4444;
+        }
+        .btn.danger:hover {
+            background: #dc2626;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .instructions h3 {
+            margin-top: 0;
+        }
+        .success {
+            background: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear Browser Cache</h1>
+        <p>If the WordPress Support Hub is not working correctly, clear your browser cache to force reload the updated files.</p>
+        
+        <div class="instructions">
+            <h3>🚀 Quick Fix Methods:</h3>
+            <ol>
+                <li><strong>Hard Refresh:</strong> Press <code>Ctrl+F5</code> (Windows) or <code>Cmd+Shift+R</code> (Mac)</li>
+                <li><strong>DevTools Method:</strong> Open DevTools (F12) → Right-click refresh → "Empty Cache and Hard Reload"</li>
+                <li><strong>Auto Clear:</strong> Click button below to clear storage and redirect</li>
+            </ol>
+        </div>
+        
+        <button class="btn danger" onclick="clearCacheAndRedirect()">🗑️ Clear Cache & Open App</button>
+        <button class="btn" onclick="clearStorageOnly()">📋 Clear Storage Only</button>
+        <a href="index.html" class="btn" target="_blank">🚀 Open Main App</a>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function clearCacheAndRedirect() {
+            // Clear all storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            // Show success message
+            document.getElementById('result').innerHTML = '<div class="success">✅ Cache cleared! Redirecting to main app...</div>';
+            
+            // Redirect with cache-busting
+            setTimeout(() => {
+                window.location.href = `index.html?v=${Date.now()}`;
+            }, 2000);
+        }
+        
+        function clearStorageOnly() {
+            localStorage.clear();
+            sessionStorage.clear();
+            document.getElementById('result').innerHTML = '<div class="success">✅ Storage cleared successfully!</div>';
+        }
+        
+        // Auto-clear on page load if requested
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('auto') === 'true') {
+            clearCacheAndRedirect();
+        }
+    </script>
+</body>
+</html> 

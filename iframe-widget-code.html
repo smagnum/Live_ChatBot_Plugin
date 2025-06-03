@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fixed Iframe Widget Code</title>
+</head>
+<body>
+    <h2>Use this corrected iframe code on your WordPress site:</h2>
+    
+    <pre><code>&lt;!-- Corrected Chatbot Widget Iframe --&gt;
+&lt;iframe 
+    src="https://masbantech.com/wordpress_support_hub/chatbot-widget.html" 
+    style="position:fixed;bottom:20px;right:20px;width:400px;height:600px;border:none;z-index:10000;pointer-events:auto;" 
+    id="chatFrame"
+    title="Live Chat Support"&gt;
+&lt;/iframe&gt;
+
+&lt;script&gt;
+// Ensure iframe is interactive
+document.getElementById('chatFrame').style.pointerEvents = 'auto';
+
+// Optional: Add error handling
+document.getElementById('chatFrame').onerror = function() {
+    console.error('Failed to load chat widget');
+};
+&lt;/script&gt;</code></pre>
+
+    <h3>Key Changes Made:</h3>
+    <ul>
+        <li>✅ Changed iframe src from relative path <code>/wordpress_support_hub/chatbot-widget.html</code> to absolute URL <code>https://masbantech.com/wordpress_support_hub/chatbot-widget.html</code></li>
+        <li>✅ Updated chatbot widget to use absolute API paths</li>
+        <li>✅ Added proper iframe attributes for accessibility</li>
+        <li>✅ Set pointer-events to auto directly in style</li>
+    </ul>
+
+    <h3>Why This Fix Works:</h3>
+    <p>When you used the relative path <code>/wordpress_support_hub/chatbot-widget.html</code>, the iframe was trying to load from the same domain context as the parent page. This caused the API calls inside the widget to use relative paths that resolved incorrectly.</p>
+    
+    <p>With the absolute URL, the widget loads in its correct context and the API calls resolve to the right endpoints.</p>
+</body>
+</html> 

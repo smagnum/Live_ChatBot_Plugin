@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Debug Script</title>
+</head>
+<body>
+    <h1>🐛 Dashboard Debug - Console Script</h1>
+    <p>Copy and paste this script into your browser console while on the dashboard page:</p>
+    
+    <textarea style="width:100%; height:400px; font-family:monospace;">
+// === Dashboard Debug Script ===
+// Paste this into browser console while on the dashboard page
+
+console.log('🔧 Starting Dashboard Debug...');
+
+// Test 1: Check supportHub
+if (typeof window.supportHub !== 'undefined') {
+    console.log('✅ supportHub is available');
+    console.log('📋 supportHub methods:', Object.getOwnPropertyNames(window.supportHub));
+} else {
+    console.log('❌ supportHub is NOT available');
+}
+
+// Test 2: Check dashboard elements
+const elements = ['chatModal', 'modalClientName', 'modalClientIP', 'chatMessages', 'messageInput'];
+console.log('🔍 Checking dashboard elements:');
+elements.forEach(id => {
+    const element = document.getElementById(id);
+    console.log(`${element ? '✅' : '❌'} ${id}: ${element ? 'Found' : 'Missing'}`);
+});
+
+// Test 3: Check clients list
+const clientsList = document.getElementById('clientsList');
+if (clientsList) {
+    console.log('✅ clientsList found');
+    console.log('👥 Current clients HTML:', clientsList.innerHTML.substring(0, 200) + '...');
+    
+    // Count chat buttons
+    const chatButtons = clientsList.querySelectorAll('.chat-open-btn');
+    console.log(`💬 Found ${chatButtons.length} chat buttons`);
+    
+    // Add test click handler
+    if (chatButtons.length > 0) {
+        console.log('🧪 Adding test click handlers...');
+        chatButtons.forEach((btn, index) => {
+            const ip = btn.getAttribute('data-client-ip');
+            console.log(`Button ${index}: IP = ${ip}`);
+            
+            // Add test click
+            btn.addEventListener('click', function(e) {
+                console.log(`🔥 TEST CLICK: Button clicked for IP ${ip}`);
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+    }
+} else {
+    console.log('❌ clientsList not found');
+}
+
+// Test 4: Check authentication
+const token = localStorage.getItem('wp_support_token');
+console.log('🔑 Auth token exists:', !!token);
+
+// Test 5: Force reload clients
+if (window.supportHub && window.supportHub.loadClients) {
+    console.log('🔄 Forcing client reload...');
+    window.supportHub.loadClients();
+} else {
+    console.log('❌ Cannot force client reload - supportHub.loadClients not available');
+}
+
+console.log('🏁 Dashboard debug complete!');
+</textarea>
+
+    <h2>📋 Instructions:</h2>
+    <ol>
+        <li><strong>Login to your dashboard:</strong> <a href="https://masbantech.com/wordpress_support_hub/" target="_blank">https://masbantech.com/wordpress_support_hub/</a></li>
+        <li><strong>Open browser console:</strong> Press F12, go to Console tab</li>
+        <li><strong>Copy the script above</strong> and paste it into the console</li>
+        <li><strong>Press Enter</strong> to run it</li>
+        <li><strong>Check the console output</strong> for debug information</li>
+    </ol>
+
+    <h2>🎯 What to Look For:</h2>
+    <ul>
+        <li><strong>supportHub available:</strong> Should be ✅</li>
+        <li><strong>Dashboard elements:</strong> Should all be ✅</li>
+        <li><strong>Chat buttons found:</strong> Should be > 0 if you have visitors</li>
+        <li><strong>Auth token exists:</strong> Should be ✅</li>
+    </ul>
+
+    <h2>🔧 Quick Fixes:</h2>
+    <p><strong>If supportHub is missing:</strong> The dashboard page didn't load properly. Refresh the page.</p>
+    <p><strong>If elements are missing:</strong> You're not on the dashboard page, you're still on the login page.</p>
+    <p><strong>If no chat buttons:</strong> Clients aren't loading. Check the database debug page.</p>
+</body>
+</html> 

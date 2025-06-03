@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Debug Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .test-section {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .test-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+        .test-content {
+            padding: 15px;
+        }
+        .success {
+            color: #0f5132;
+            background: #d1e7dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #842029;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #055160;
+            background: #cff4fc;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .debug-log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        button {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .storage-info {
+            background: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐛 WordPress Support Hub - Frontend Debug Tool</h1>
+        
+        <div class="test-section">
+            <div class="test-header">1. Browser Environment Check</div>
+            <div class="test-content">
+                <div id="browser-info"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-header">2. Local Storage Check</div>
+            <div class="test-content">
+                <div id="storage-info"></div>
+                <button onclick="clearStorage()">🗑️ Clear All Storage</button>
+                <button onclick="checkStorage()">🔍 Refresh Storage Info</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-header">3. API Connection Test</div>
+            <div class="test-content">
+                <div>
+                    <input type="url" id="testUrl" placeholder="https://masbantech.com" value="https://masbantech.com" style="width: 250px;">
+                    <input type="text" id="testUsername" placeholder="admin" value="admin">
+                    <input type="password" id="testPassword" placeholder="password">
+                    <button onclick="testConnection()">🧪 Test Connection</button>
+                </div>
+                <div id="connection-result"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-header">4. Live Debug Log</div>
+            <div class="test-content">
+                <button onclick="clearLog()">🗑️ Clear Log</button>
+                <button onclick="testFullFlow()">🚀 Test Full Flow</button>
+                <div id="debug-log" class="debug-log"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-header">5. Manual API Tests</div>
+            <div class="test-content">
+                <button onclick="testClientsAPI()">📋 Test Clients API</button>
+                <button onclick="testMessagesAPI()">💬 Test Messages API</button>
+                <div id="api-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug logging
+        let debugLog = [];
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            debugLog.push(logEntry);
+            
+            const logElement = document.getElementById('debug-log');
+            if (logElement) {
+                logElement.innerHTML = debugLog.join('\n');
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+            
+            // Also log to browser console
+            console.log(logEntry);
+        }
+
+        function clearLog() {
+            debugLog = [];
+            document.getElementById('debug-log').innerHTML = '';
+        }
+
+        // Browser environment check
+        function checkBrowserEnvironment() {
+            const info = document.getElementById('browser-info');
+            let html = '';
+            
+            html += `<div class="info">Browser: ${navigator.userAgent}</div>`;
+            html += `<div class="info">Local Storage: ${typeof(Storage) !== "undefined" ? '✅ Supported' : '❌ Not Supported'}</div>`;
+            html += `<div class="info">Fetch API: ${typeof(fetch) !== "undefined" ? '✅ Supported' : '❌ Not Supported'}</div>`;
+            html += `<div class="info">Current URL: ${window.location.href}</div>`;
+            html += `<div class="info">Protocol: ${window.location.protocol}</div>`;
+            
+            info.innerHTML = html;
+            log('Browser environment checked');
+        }
+
+        // Storage check
+        function checkStorage() {
+            const info = document.getElementById('storage-info');
+            let html = '<h4>Local Storage Contents:</h4>';
+            
+            if (typeof(Storage) !== "undefined") {
+                if (localStorage.length === 0) {
+                    html += '<div class="info">No items in localStorage</div>';
+                } else {
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        html += `<div class="storage-info"><strong>${key}:</strong> ${value.substring(0, 100)}${value.length > 100 ? '...' : ''}</div>`;
+                    }
+                }
+            } else {
+                html += '<div class="error">localStorage not supported</div>';
+            }
+            
+            info.innerHTML = html;
+            log('Storage checked');
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            checkStorage();
+            log('Storage cleared');
+        }
+
+        // API testing
+        async function testConnection() {
+            const url = document.getElementById('testUrl').value;
+            const username = document.getElementById('testUsername').value;
+            const password = document.getElementById('testPassword').value;
+            const resultDiv = document.getElementById('connection-result');
+            
+            log(`Testing connection to ${url} with username ${username}`);
+            
+            try {
+                const response = await fetch('api/connect-simple.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        wpUrl: url,
+                        wpUsername: username,
+                        wpPassword: password
+                    })
+                });
+                
+                log(`Connection response status: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`Connection response data: ${JSON.stringify(data).substring(0, 200)}...`);
+                
+                if (data.success) {
+                    localStorage.setItem('wp_support_token', data.data.token);
+                    localStorage.setItem('wp_support_session', data.data.session_id);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Connection Successful!</h4>
+                            <p>Token stored in localStorage</p>
+                            <p>Session ID: ${data.data.session_id}</p>
+                        </div>
+                    `;
+                    log('Connection successful, token stored');
+                } else {
+                    throw new Error(data.error || 'Connection failed');
+                }
+                
+            } catch (error) {
+                log(`Connection error: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<div class="error">❌ Connection failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testClientsAPI() {
+            const token = localStorage.getItem('wp_support_token');
+            const resultDiv = document.getElementById('api-results');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div class="error">❌ No token found. Connect first.</div>';
+                log('No token found for clients API test', 'error');
+                return;
+            }
+            
+            log('Testing clients API...');
+            
+            try {
+                const response = await fetch('api/clients.php', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`Clients API response status: ${response.status}`);
+                
+                const data = await response.json();
+                log(`Clients API response: ${JSON.stringify(data).substring(0, 200)}...`);
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Clients API Working!</h4>
+                            <p>Found ${data.data.clients.length} clients</p>
+                            <p>Statistics: ${JSON.stringify(data.data.statistics)}</p>
+                        </div>
+                    `;
+                    log(`Clients API successful: ${data.data.clients.length} clients found`);
+                } else {
+                    throw new Error(data.error || 'Clients API failed');
+                }
+                
+            } catch (error) {
+                log(`Clients API error: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<div class="error">❌ Clients API failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testMessagesAPI() {
+            const token = localStorage.getItem('wp_support_token');
+            const resultDiv = document.getElementById('api-results');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div class="error">❌ No token found. Connect first.</div>';
+                log('No token found for messages API test', 'error');
+                return;
+            }
+            
+            log('Testing messages API...');
+            
+            try {
+                // Test with a sample client IP
+                const response = await fetch('api/messages.php?client_ip=192.168.1.101', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`Messages API response status: ${response.status}`);
+                
+                const data = await response.json();
+                log(`Messages API response: ${JSON.stringify(data).substring(0, 200)}...`);
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Messages API Working!</h4>
+                            <p>Found ${data.data.messages.length} messages</p>
+                            <p>Client: ${data.data.client.name}</p>
+                        </div>
+                    `;
+                    log(`Messages API successful: ${data.data.messages.length} messages found`);
+                } else {
+                    throw new Error(data.error || 'Messages API failed');
+                }
+                
+            } catch (error) {
+                log(`Messages API error: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<div class="error">❌ Messages API failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testFullFlow() {
+            log('=== STARTING FULL FLOW TEST ===');
+            clearStorage();
+            
+            // Test connection
+            await testConnection();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test clients API
+            await testClientsAPI();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test messages API
+            await testMessagesAPI();
+            
+            log('=== FULL FLOW TEST COMPLETED ===');
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            checkBrowserEnvironment();
+            checkStorage();
+            log('Frontend debug tool initialized');
+        });
+
+        // Override console.error to capture errors
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            log(`Console Error: ${args.join(' ')}`, 'error');
+            originalConsoleError.apply(console, args);
+        };
+
+        // Capture unhandled errors
+        window.addEventListener('error', function(event) {
+            log(`JavaScript Error: ${event.error.message} at ${event.filename}:${event.lineno}`, 'error');
+        });
+
+        // Capture fetch errors
+        const originalFetch = window.fetch;
+        window.fetch = async function(...args) {
+            log(`Fetch request: ${args[0]}`);
+            try {
+                const response = await originalFetch.apply(this, args);
+                log(`Fetch response: ${response.status} ${response.statusText}`);
+                return response;
+            } catch (error) {
+                log(`Fetch error: ${error.message}`, 'error');
+                throw error;
+            }
+        };
+    </script>
+</body>
+</html> 
